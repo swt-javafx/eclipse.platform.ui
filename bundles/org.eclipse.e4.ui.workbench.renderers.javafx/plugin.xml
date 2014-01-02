@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="ide"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="ide"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.e4.ui.workbench.renderers.javafx.ide"
+            name="Eclipse on JavaFX">
+         <property
+               name="rendererFactoryUri"
+               value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXRendererFactory">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
