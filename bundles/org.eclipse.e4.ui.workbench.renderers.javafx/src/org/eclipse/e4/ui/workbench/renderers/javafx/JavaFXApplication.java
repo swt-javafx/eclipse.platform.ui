@@ -16,42 +16,26 @@ public class JavaFXApplication implements IApplication {
 
 	private static IApplicationContext applicationContext;
 	private static IApplication ideApplication;
-	private static boolean started = false;
-	private static Object startedMutex = new Object();
 	
 	public static class App extends Application {
 		@Override
 		public void start(Stage primaryStage) throws Exception {
 			Display.primaryStage = primaryStage;
-			synchronized (startedMutex) {
-				started = true;
-				startedMutex.notifyAll();
-			}
+			ideApplication = getIDEApplication();
+			ideApplication.start(applicationContext);
+		}
+		
+		@Override
+		public void stop() throws Exception {
+			super.stop();
+			// TODO clean up code
 		}
 	}
 	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		applicationContext = context;
-		
-		synchronized (startedMutex) {
-			new Thread() {
-				public void run() {
-					App.launch(App.class, new String[0]);
-					Display.getDefault().dispose();
-				};
-			}.start();
-			
-			while (!started) {
-				try {
-					startedMutex.wait();
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		
-		ideApplication = getIDEApplication();
-		ideApplication.start(applicationContext);
+		App.launch(App.class, new String[0]);
 		return Status.OK_STATUS;
 	}
 
