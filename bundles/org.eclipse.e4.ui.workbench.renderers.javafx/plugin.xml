@@ -23,6 +23,10 @@
                name="rendererFactoryUri"
                value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXRendererFactory">
          </property>
+         <property
+               name="applicationXMI"
+               value="org.eclipse.e4.ui.workbench.renderers.javafx/Application.e4xmi">
+         </property>
       </product>
    </extension>
 
