@@ -17,7 +17,7 @@
          id="ide"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.eclipse.e4.ui.workbench.renderers.javafx.ide"
+            application="org.eclipse.ui.ide.workbench"
             name="Eclipse on JavaFX">
          <property
                name="rendererFactoryUri"
@@ -26,6 +26,10 @@
          <property
                name="applicationXMI"
                value="org.eclipse.e4.ui.workbench.renderers.javafx/Application.e4xmi">
+         </property>
+         <property
+               name="presentationURI"
+               value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXPresentationEngine">
          </property>
       </product>
    </extension>
