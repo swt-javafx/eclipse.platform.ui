@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Javafx
-Bundle-SymbolicName: org.eclipse.e4.ui.workbench.renderers.javafx;singleton:=true
+Bundle-SymbolicName: org.eclipse.e4.ui.workbench.javafx;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.e4.ui.workbench.renderers.javafx.Activator
 Require-Bundle: org.eclipse.core.runtime,
