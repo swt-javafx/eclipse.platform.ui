@@ -20,14 +20,6 @@
             application="org.eclipse.ui.ide.workbench"
             name="Eclipse on JavaFX">
          <property
-               name="rendererFactoryUri"
-               value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXRendererFactory">
-         </property>
-         <property
-               name="applicationXMI"
-               value="org.eclipse.e4.ui.workbench.renderers.javafx/Application.e4xmi">
-         </property>
-         <property
                name="presentationURI"
                value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXPresentationEngine">
          </property>
