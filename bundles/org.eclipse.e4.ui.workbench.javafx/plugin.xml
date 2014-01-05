@@ -3,25 +3,13 @@
 <plugin>
    <extension
          id="ide"
-         point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            thread="main"
-            visible="true">
-         <run
-               class="org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
-         id="ide"
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.ui.ide.workbench"
             name="Eclipse on JavaFX">
          <property
                name="presentationURI"
-               value="bundleclass://org.eclipse.e4.ui.workbench.renderers.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXPresentationEngine">
+               value="bundleclass://org.eclipse.e4.ui.workbench.javafx/org.eclipse.e4.ui.workbench.renderers.javafx.JavaFXPresentationEngine">
          </property>
       </product>
    </extension>
