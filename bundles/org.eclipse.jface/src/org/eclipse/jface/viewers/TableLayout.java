@@ -101,6 +101,11 @@ public class TableLayout extends Layout {
 		if (wHint != SWT.DEFAULT && hHint != SWT.DEFAULT) {
 			return new Point(wHint, hHint);
 		}
+		
+		//FIXME Temp JavaFX fix
+		if( !(c instanceof Table) ) {
+			return new Point(100,100);
+		}
 
 		Table table = (Table) c;
 		// To avoid recursions.
