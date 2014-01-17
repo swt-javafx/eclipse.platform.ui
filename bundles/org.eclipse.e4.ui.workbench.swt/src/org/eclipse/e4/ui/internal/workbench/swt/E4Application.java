@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -122,13 +124,31 @@ public class E4Application implements IApplication {
 		return display;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.
-	 * IApplicationContext)
-	 */
-	public Object start(IApplicationContext applicationContext)
+	//FIXME Temp JavaFX fix
+	static E4Application APP;
+	static IApplicationContext CTX;
+
+	public static class FXApp extends Application {
+
+		public void start(Stage arg0) throws Exception {
+			APP.startIt(CTX);
+		}
+
+	}
+
+	public Object start(IApplicationContext appContext) throws Exception {
+		APP = this;
+		CTX = appContext;
+		try {
+			Application.launch(FXApp.class, null);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public Object startIt(IApplicationContext applicationContext)
 			throws Exception {
 		// set the display name before the Display is
 		// created to ensure the app name is used in any
