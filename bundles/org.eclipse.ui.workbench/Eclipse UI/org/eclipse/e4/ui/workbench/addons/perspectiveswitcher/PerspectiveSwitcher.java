@@ -852,9 +852,13 @@ public class PerspectiveSwitcher {
 		gc.getClipping(clipping);
 		r.intersect(clipping);
 		gc.setClipping(r);
-		Image b = toolParent.getBackgroundImage();
-		if (b != null && !b.isDisposed())
-			gc.drawImage(b, 0, 0);
+		//FIXME Temp JavaFX fix
+		if (toolParent != null) {
+			Image b = toolParent.getBackgroundImage();
+			if (b != null && !b.isDisposed())
+				gc.drawImage(b, 0, 0);
+
+		}
 
 		r.dispose();
 		clipping.dispose();
