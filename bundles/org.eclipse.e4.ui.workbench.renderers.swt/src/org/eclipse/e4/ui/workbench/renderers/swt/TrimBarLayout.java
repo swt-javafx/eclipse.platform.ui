@@ -246,7 +246,8 @@ public class TrimBarLayout extends Layout {
 			boolean zeroSize = ctrlWidth == 0 && ctrlHeight == 0;
 
 			// If its a 'spacer' then add any available 'extra' space to it
-			if (isSpacer(ctrl)) {
+			//FIXME Temp JavaFX fix
+			if (isSpacer(ctrl) && remainingExtraSpace > 0) {
 				int extra = remainingExtraSpace / remainingSpacerCount;
 				if (horizontal) {
 					ctrlWidth += extra;

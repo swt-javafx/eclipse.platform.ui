@@ -24,10 +24,8 @@ import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -164,29 +162,30 @@ public class ContributedPartRenderer extends SWTPartRenderer {
 
 				@Override
 				protected void layout(Composite composite, boolean flushCache) {
-					Rectangle bounds = composite.getBounds();
-					if (composite.getChildren().length == 1) {
-						composite.getChildren()[0].setBounds(composite
-								.getBounds());
-					} else if (composite.getChildren().length == 3) {
-						Label label = (Label) composite.getChildren()[0];
-						Label separator = (Label) composite.getChildren()[1];
-						Control partCtrl = composite.getChildren()[2];
-
-						// if the label is not visible, give it a zero size
-						int labelHeight = label.isVisible() ? label
-								.computeSize(bounds.width, SWT.DEFAULT).y : 0;
-						label.setBounds(0, 0, bounds.width, labelHeight);
-
-						int separatorHeight = separator.isVisible() ? separator
-								.computeSize(bounds.width, SWT.DEFAULT).y : 0;
-						separator.setBounds(0, labelHeight, bounds.width,
-								separatorHeight);
-
-						partCtrl.setBounds(0, labelHeight + separatorHeight,
-								bounds.width, bounds.height - labelHeight
-										- separatorHeight);
-					}
+					//FIXME Temp JavaFX fix
+					// Rectangle bounds = composite.getBounds();
+					// if (composite.getChildren().length == 1) {
+					// composite.getChildren()[0].setBounds(composite
+					// .getBounds());
+					// } else if (composite.getChildren().length == 3) {
+					// Label label = (Label) composite.getChildren()[0];
+					// Label separator = (Label) composite.getChildren()[1];
+					// Control partCtrl = composite.getChildren()[2];
+					//
+					// // if the label is not visible, give it a zero size
+					// int labelHeight = label.isVisible() ? label
+					// .computeSize(bounds.width, SWT.DEFAULT).y : 0;
+					// label.setBounds(0, 0, bounds.width, labelHeight);
+					//
+					// int separatorHeight = separator.isVisible() ? separator
+					// .computeSize(bounds.width, SWT.DEFAULT).y : 0;
+					// separator.setBounds(0, labelHeight, bounds.width,
+					// separatorHeight);
+					//
+					// partCtrl.setBounds(0, labelHeight + separatorHeight,
+					// bounds.width, bounds.height - labelHeight
+					// - separatorHeight);
+					// }
 				}
 			});
 

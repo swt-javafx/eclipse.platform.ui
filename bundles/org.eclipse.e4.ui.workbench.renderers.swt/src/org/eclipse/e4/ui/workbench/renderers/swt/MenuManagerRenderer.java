@@ -323,7 +323,8 @@ public class MenuManagerRenderer extends SWTPartRenderer {
 			// ((Control) parent).setMenu(newMenu);
 			newMenu.setData(menuManager);
 		}
-		if (!menuManager.getRemoveAllWhenShown()) {
+		//FIXME Temp JavaFX fix
+		if (menuManager != null && !menuManager.getRemoveAllWhenShown()) {
 			processContributions(menuModel, menuModel.getElementId(), menuBar,
 					menuModel instanceof MPopupMenu);
 		}
