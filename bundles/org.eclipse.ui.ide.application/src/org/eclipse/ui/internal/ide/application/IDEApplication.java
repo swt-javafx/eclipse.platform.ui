@@ -21,6 +21,9 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -88,11 +91,32 @@ public class IDEApplication implements IApplication, IExecutableExtension {
     public IDEApplication() {
         // There is nothing to do for IDEApplication
     }
+    
+    //FIXME Temp JavaFX fix
+    static IDEApplication APP;
+    static IApplicationContext CTX;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext context)
-     */
+    public static class FXApp extends Application {
+
+		public void start(Stage arg0) throws Exception {
+			APP.startIt(CTX);
+		}
+    	
+    }
+    
     public Object start(IApplicationContext appContext) throws Exception {
+    	APP = this;
+    	CTX = appContext;
+    	try {
+    		Application.launch(FXApp.class,null);	
+    	} catch(Throwable t) {
+    		t.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
+    public Object startIt(IApplicationContext appContext) throws Exception {
         Display display = createDisplay();
         // processor must be created before we start event loop
         DelayedEventsProcessor processor = new DelayedEventsProcessor(display);
