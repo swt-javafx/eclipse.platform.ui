@@ -90,11 +90,34 @@ public class IDEApplication implements IApplication, IExecutableExtension {
         // There is nothing to do for IDEApplication
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext context)
-     */
-    public Object start(IApplicationContext appContext) throws Exception {
-        Display display = createDisplay();
+    public Object start(final IApplicationContext context) throws Exception {
+        final Display display = createDisplay();
+
+        // The main thread isn't always the UI thread.
+        // Do a syncExec of the start if it's not.
+
+        if (Display.getCurrent() != null) {
+        	return start0(context, display);
+        }
+
+        final Object[] retCode = new Object[1];
+        final Exception[] exc = new Exception[1];
+       	display.syncExec(new Runnable() {
+       		public void run() {
+       			try {
+					retCode[0] = start0(context, display);
+				} catch (Exception e) {
+					exc[0] = e;
+				}
+       		}
+       	});
+
+       	if (exc[0] != null)
+       		throw exc[0];
+       	return retCode[0];
+    }
+    
+    private Object start0(IApplicationContext appContext, Display display) throws Exception {
         // processor must be created before we start event loop
         DelayedEventsProcessor processor = new DelayedEventsProcessor(display);
 

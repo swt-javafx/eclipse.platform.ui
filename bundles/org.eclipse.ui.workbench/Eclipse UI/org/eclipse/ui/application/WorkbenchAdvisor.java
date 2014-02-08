@@ -22,10 +22,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.internal.StartupThreading;
+import org.eclipse.ui.internal.StartupThreading.StartupRunnable;
 import org.eclipse.ui.internal.UISynchronizer;
 import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.eclipse.ui.internal.WorkbenchWindowConfigurer;
-import org.eclipse.ui.internal.StartupThreading.StartupRunnable;
 import org.eclipse.ui.internal.application.CompatibilityWorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.util.PrefUtil;
 import org.eclipse.ui.model.ContributionComparator;
@@ -760,7 +760,7 @@ public abstract class WorkbenchAdvisor {
 		// the UI thread but it could take enough time to disrupt progress reporting.
 		// spawn a new thread to do the grunt work of this initialization and spin the event loop 
 		// ourselves just like it's done in Workbench.
-		final boolean[] initDone = new boolean[]{false};
+		final Object initDone = new Object();
 		final Throwable [] error = new Throwable[1];
 		Thread initThread = new Thread() {
 			/* (non-Javadoc)
@@ -793,28 +793,25 @@ public abstract class WorkbenchAdvisor {
 					error[0] = e;
 				}
 				finally {
-					initDone[0] = true;
-					display.wake();
+					display.syncExec(new Runnable() {
+						public void run() {
+							display.exitNestedEventLoop(initDone, null);
+						}
+					});
 				}
-			}};
-			initThread.start();
-
-			while (true) {
-				if (!display.readAndDispatch()) {
-					if (initDone[0])
-						break;
-					display.sleep();
-				}
-				
 			}
+		};
+
+		initThread.start();
+		display.enterNestedEventLoop(initDone);
 			
-			// can only be a runtime or error
-			if (error[0] instanceof Error)
-				throw (Error)error[0];
-			else if (error[0] instanceof RuntimeException)
-				throw (RuntimeException)error[0];
-		
-			return result[0];
+		// can only be a runtime or error
+		if (error[0] instanceof Error)
+			throw (Error) error[0];
+		else if (error[0] instanceof RuntimeException)
+			throw (RuntimeException) error[0];
+
+		return result[0];
 	}
 
 	/**

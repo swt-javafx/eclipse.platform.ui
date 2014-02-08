@@ -1115,6 +1115,12 @@ public class PartRenderingEngine implements IPresentationEngine {
 						}
 					};
 				}
+
+				if (spinOnce)
+					return;
+				final Object loopDone = new Object();
+				display.enterNestedEventLoop(loopDone);
+
 				// Spin the event loop until someone disposes the display
 				while (((testShell != null && !testShell.isDisposed()) || (theApp != null && someAreVisible(theApp
 						.getChildren()))) && !display.isDisposed()) {
