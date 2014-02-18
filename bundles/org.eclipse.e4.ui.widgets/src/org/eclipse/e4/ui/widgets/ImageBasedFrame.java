@@ -141,7 +141,7 @@ public class ImageBasedFrame extends Canvas {
 	}
 
 	protected void drawFrame(PaintEvent e) {
-		if (handle.isDisposed()) {
+		if (handle.isDisposed() || imageCache == null) {
 			return;
 		}
 		

@@ -1259,11 +1259,25 @@ public class StackRenderer extends LazyStackRenderer {
 		swtMenu.setLocation(displayAt);
 		swtMenu.setVisible(true);
 
-		Display display = Display.getCurrent();
-		while (!swtMenu.isDisposed() && swtMenu.isVisible()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
+		final Display display = Display.getCurrent();
+		final Boolean[] key = new Boolean[1];
+		swtMenu.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				if (key[0] != null) {
+					display.exitNestedEventLoop(key, null);
+					key[0] = Boolean.TRUE;
+				}
+			}
+		});
+		swtMenu.addListener(SWT.Hide, new Listener() {
+			public void handleEvent(org.eclipse.swt.widgets.Event event) {
+				if (key[0] != null) {
+					display.exitNestedEventLoop(key, null);
+					key[0] = Boolean.TRUE;
+				}
+			}
+		});
+		display.enterNestedEventLoop(key);
 		if (!swtMenu.isDisposed()
 				&& !(swtMenu.getData() instanceof MenuManager)) {
 			swtMenu.dispose();
