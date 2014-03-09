@@ -644,6 +644,36 @@ public final class Workbench extends EventManager implements IWorkbench,
 		return returnCode[0];
 	}
 
+	public static final void createWorkbench(final IEclipseContext context,
+			final WorkbenchAdvisor advisor) {
+		Realm.runWithDefault(context.get(Realm.class), new Runnable() {
+			public void run() {
+				final String nlExtensions = Platform.getNLExtensions();
+				if (nlExtensions.length() > 0) {
+					ULocale.setDefault(Category.FORMAT,
+							new ULocale(ULocale.getDefault(Category.FORMAT).getBaseName()
+									+ nlExtensions));
+				}
+
+				System.setProperty(org.eclipse.e4.ui.workbench.IWorkbench.XMI_URI_ARG,
+						"org.eclipse.ui.workbench/LegacyIDE.e4xmi"); //$NON-NLS-1$
+
+				IPreferenceStore store = WorkbenchPlugin.getDefault().getPreferenceStore();
+				if (!store.isDefault(IPreferenceConstants.LAYOUT_DIRECTION)) {
+					int orientation = store.getInt(IPreferenceConstants.LAYOUT_DIRECTION);
+					Window.setDefaultOrientation(orientation);
+				}
+
+				Display display = context.get(Display.class);
+				MApplication app = context.get(MApplication.class);
+
+				// create the workbench instance
+				Workbench workbench = new Workbench(display, advisor, app, context);
+				workbench.runUI();
+			}
+		});
+	}
+
 	private static void setSearchContribution(MApplication app, boolean enabled) {
 		for (MTrimContribution contribution : app.getTrimContributions()) {
 			if ("org.eclipse.ui.ide.application.trimcontribution.QuickAccess".contains(contribution //$NON-NLS-1$

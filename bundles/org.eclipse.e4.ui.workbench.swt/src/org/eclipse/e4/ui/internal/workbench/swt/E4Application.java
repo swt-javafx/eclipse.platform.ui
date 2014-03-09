@@ -270,14 +270,6 @@ public class E4Application implements IApplication {
 		// adds basic services to the contexts
 		initializeServices(appModel);
 
-		// let the life cycle manager add to the model
-		if (lcManager != null) {
-			ContextInjectionFactory.invoke(lcManager, ProcessAdditions.class,
-					appContext, null);
-			ContextInjectionFactory.invoke(lcManager, ProcessRemovals.class,
-					appContext, null);
-		}
-
 		// Create the addons
 		IEclipseContext addonStaticContext = EclipseContextFactory.create();
 		for (MAddon addon : appModel.getAddons()) {
@@ -285,6 +277,14 @@ public class E4Application implements IApplication {
 			Object obj = factory.create(addon.getContributionURI(), appContext,
 					addonStaticContext);
 			addon.setObject(obj);
+		}
+
+		// let the life cycle manager add to the model
+		if (lcManager != null) {
+			ContextInjectionFactory.invoke(lcManager, ProcessAdditions.class,
+					appContext, null);
+			ContextInjectionFactory.invoke(lcManager, ProcessRemovals.class,
+					appContext, null);
 		}
 
 		// Parse out parameters from both the command line and/or the product

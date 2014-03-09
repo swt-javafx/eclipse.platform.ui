@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -149,6 +150,10 @@ public final class PlatformUI {
             WorkbenchAdvisor advisor) {
         return Workbench.createAndRunWorkbench(display, advisor);
     }
+
+	public static void createWorkbench(IEclipseContext context, WorkbenchAdvisor advisor) {
+		Workbench.createWorkbench(context, advisor);
+	}
 
     /**
      * Creates the <code>Display</code> to be used by the workbench.
