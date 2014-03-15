@@ -23,6 +23,7 @@ import org.eclipse.core.commands.State;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -140,7 +141,11 @@ public class HandledContributionItem extends ContributionItem {
 
 	@Inject
 	void setResourceUtils(IResourceUtilities utils) {
-		resUtils = (ISWTResourceUtilities) utils;
+		if (utils instanceof ISWTResourceUtilities)
+			resUtils = (ISWTResourceUtilities) utils;
+		else
+			resUtils = (ISWTResourceUtilities) Platform.getAdapterManager()
+					.getAdapter(utils, ISWTResourceUtilities.class);
 	}
 
 	private ISafeRunnable getUpdateRunner() {

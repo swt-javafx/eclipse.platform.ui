@@ -38,13 +38,18 @@ public class DnDAddon {
 			if (!(changedElement instanceof MWindow))
 				return;
 
-			Widget widget = (Widget) event.getProperty(EventTags.NEW_VALUE);
-			if (widget instanceof Shell && !widget.isDisposed()) {
-				DnDManager theManager = (DnDManager) widget.getData("DnDManager"); //$NON-NLS-1$
-				if (theManager == null) {
-					theManager = new DnDManager((MWindow) changedElement);
-					widget.setData("DnDManager", theManager); //$NON-NLS-1$
+			Object newValue = event.getProperty(EventTags.NEW_VALUE);
+			if (newValue instanceof Widget) {
+				Widget widget = (Widget) newValue;
+				if (widget instanceof Shell && !widget.isDisposed()) {
+					DnDManager theManager = (DnDManager) widget.getData("DnDManager"); //$NON-NLS-1$
+					if (theManager == null) {
+						theManager = new DnDManager((MWindow) changedElement);
+						widget.setData("DnDManager", theManager); //$NON-NLS-1$
+					}
 				}
+			} else {
+				System.err.println("DnDAddon: not a Widget"); //$NON-NLS-1$
 			}
 		}
 	};

@@ -1488,7 +1488,12 @@ public class WorkbenchWindow implements IWorkbenchWindow {
 	}
 
 	public Shell getShell() {
-		return (Shell) model.getWidget();
+		Object widget = model.getWidget();
+		if (widget instanceof Shell) {
+			return (Shell) widget;
+		}
+		Shell shell = (Shell) Platform.getAdapterManager().getAdapter(model, Shell.class);
+		return shell;
 	}
 
 	public boolean close(final boolean remove) {

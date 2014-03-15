@@ -13,6 +13,7 @@ package org.eclipse.e4.ui.workbench.renderers.swt;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.css.core.engine.CSSEngine;
@@ -311,8 +312,12 @@ public abstract class SWTPartRenderer extends AbstractPartRenderer {
 	public void init(IEclipseContext context) {
 		super.init(context);
 
-		resUtils = (ISWTResourceUtilities) context.get(IResourceUtilities.class
-				.getName());
+		Object r = context.get(IResourceUtilities.class.getName());
+		if (r instanceof ISWTResourceUtilities) {
+			resUtils = (ISWTResourceUtilities) r;
+		} else {
+			resUtils = (ISWTResourceUtilities) Platform.getAdapterManager().getAdapter(r, ISWTResourceUtilities.class);
+		}
 		pinImage = getImageFromURI(pinURI);
 
 		Display.getCurrent().disposeExec(new Runnable() {

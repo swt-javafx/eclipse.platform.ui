@@ -151,8 +151,8 @@ public final class PlatformUI {
         return Workbench.createAndRunWorkbench(display, advisor);
     }
 
-	public static void createWorkbench(IEclipseContext context, WorkbenchAdvisor advisor) {
-		Workbench.createWorkbench(context, advisor);
+	public static IWorkbench createWorkbench(IEclipseContext context, WorkbenchAdvisor advisor) {
+		return Workbench.createWorkbench(context, advisor);
 	}
 
     /**

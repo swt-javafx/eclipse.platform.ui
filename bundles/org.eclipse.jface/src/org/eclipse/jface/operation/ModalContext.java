@@ -14,11 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.ProgressMonitorWrapper;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.util.Policy;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -80,11 +77,6 @@ public class ModalContext {
 		private Display display;
 
 		/**
-		 * Indicates whether to continue event queue dispatching.
-		 */
-		private volatile boolean continueEventDispatching = true;
-
-		/**
 		 * The thread that forked this modal context thread.
 		 * 
 		 * @since 3.1
@@ -144,21 +136,13 @@ public class ModalContext {
 						throwable = exception;
 				}
 
-				// Make sure that all events in the asynchronous event queue
-				// are dispatched.
 				display.syncExec(new Runnable() {
 					@Override
 					public void run() {
-						// do nothing
+						display.exitNestedEventLoop(ModalContextThread.this,
+								null);
 					}
 				});
-
-				// Stop event dispatching
-				continueEventDispatching = false;
-
-				// Force the event loop to return from sleep () so that
-				// it stops event dispatching.
-				display.asyncExec(null);
 			}
 		}
 
@@ -167,50 +151,7 @@ public class ModalContext {
 		 */
 		public void block() {
 			if (display == Display.getCurrent()) {
-				int exceptionCount = 0;
-				while (continueEventDispatching) {
-					// Run the event loop. Handle any uncaught exceptions caused
-					// by UI events.
-					try {
-						if (!display.readAndDispatch()) {
-							display.sleep();
-						}
-						exceptionCount = 0;
-					}
-					// ThreadDeath is a normal error when the thread is dying.
-					// We must
-					// propagate it in order for it to properly terminate.
-					catch (ThreadDeath e) {
-						throw (e);
-					}
-					// For all other exceptions, log the problem.
-					catch (Throwable t) {
-						if (t instanceof VirtualMachineError) {
-							throw (VirtualMachineError) t;
-						}
-						exceptionCount++;
-						// We're counting exceptions in client code, such as asyncExecs,
-						// so be generous about how many may fail consecutively before we
-						// give up.
-						if (exceptionCount > 50 || display.isDisposed()) {
-			                if (t instanceof RuntimeException) {
-								throw (RuntimeException) t;
-							} else if (t instanceof Error) {
-								throw (Error) t;
-							} else {
-								throw new RuntimeException(t);
-							}
-						}
-						Policy
-								.getLog()
-								.log(
-										new Status(
-												IStatus.ERROR,
-												Policy.JFACE,
-												"Unhandled event loop exception during blocked modal context.",//$NON-NLS-1$
-												t));
-					}
-				}
+				display.enterNestedEventLoop(this);
 			} else {
 				try {
 					join();

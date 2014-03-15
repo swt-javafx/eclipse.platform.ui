@@ -644,7 +644,7 @@ public final class Workbench extends EventManager implements IWorkbench,
 		return returnCode[0];
 	}
 
-	public static final void createWorkbench(final IEclipseContext context,
+	public static final IWorkbench createWorkbench(final IEclipseContext context,
 			final WorkbenchAdvisor advisor) {
 		Realm.runWithDefault(context.get(Realm.class), new Runnable() {
 			public void run() {
@@ -669,9 +669,12 @@ public final class Workbench extends EventManager implements IWorkbench,
 
 				// create the workbench instance
 				Workbench workbench = new Workbench(display, advisor, app, context);
-				workbench.runUI();
+				// workbench.runUI();
+				workbench.init();
+				advisor.postStartup();
 			}
 		});
+		return Workbench.getInstance();
 	}
 
 	private static void setSearchContribution(MApplication app, boolean enabled) {
